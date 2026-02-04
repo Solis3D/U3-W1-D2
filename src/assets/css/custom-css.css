@@ -1,0 +1,7 @@
+.single-book {
+  cursor: pointer;
+}
+
+.selected-book {
+  border: 2px solid red !important;
+}
