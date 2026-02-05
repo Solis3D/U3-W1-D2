@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Card } from "react-bootstrap";
+import AddComment from "./AddComment";
 
 const commentsURL = "https://striveschool-api.herokuapp.com/api/comments/";
 
@@ -10,7 +11,7 @@ class CommentArea extends Component {
 
   //   FUNZIONE FETCH COMMENTI
   getComments = () => {
-    fetch(commentsURL, {
+    fetch(commentsURL + this.props.bookAsin, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTg0YTY0MTgwMjA2ODAwMTUwNGRjNzYiLCJpYXQiOjE3NzAzMDA5OTMsImV4cCI6MTc3MTUxMDU5M30.bN9O8Ppdw0c6QuZgsUavdRArUuZxBMJ09XAchNn9dls",
@@ -25,11 +26,11 @@ class CommentArea extends Component {
       })
       .then((commentsFromDB) => {
         // console.log("Commenti ricevuti", commentsFromDB);
-        let filteredComments = commentsFromDB.filter((comment) => comment.elementId.includes(this.props.bookAsin));
-        console.log("Filtered Comments:", filteredComments);
+        // let filteredComments = commentsFromDB.filter((comment) => comment.elementId.includes(this.props.bookAsin));
+        // console.log("Filtered Comments:", filteredComments);
 
         this.setState({
-          comments: filteredComments,
+          comments: commentsFromDB,
         });
       })
       .catch((err) => {
@@ -50,6 +51,7 @@ class CommentArea extends Component {
     return (
       <Card className="my-2 overflow-y-auto" style={{ width: "14rem", maxHeight: "200px" }}>
         <Card.Body>
+          <AddComment />
           {this.state.comments.map((comment) => (
             <div key={comment._id}>
               <hr />
