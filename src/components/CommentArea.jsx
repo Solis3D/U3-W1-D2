@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Card } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import AddComment from "./AddComment";
 
 const commentsURL = "https://striveschool-api.herokuapp.com/api/comments/";
@@ -11,6 +11,11 @@ class CommentArea extends Component {
 
   //   FUNZIONE FETCH COMMENTI
   getComments = () => {
+    if (!this.props.bookAsin) {
+      this.setState({ comments: [] });
+      return;
+    }
+
     fetch(commentsURL + this.props.bookAsin, {
       headers: {
         Authorization:
@@ -40,29 +45,41 @@ class CommentArea extends Component {
   //   FINE FUNZIONE FETCH COMMENTI
 
   componentDidMount() {
-    console.log("PARTE ComponentDidMount");
+    // console.log("PARTE ComponentDidMount");
 
     this.getComments();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.bookAsin !== this.props.bookAsin) {
+      this.getComments();
+    }
   }
 
   render() {
     // console.log("PARTE RENDER");
 
     return (
-      <Card className="my-2 overflow-y-auto" style={{ width: "14rem", maxHeight: "200px" }}>
-        <Card.Body>
-          <AddComment />
-          {this.state.comments.map((comment) => (
-            <div key={comment._id}>
-              <hr />
-              <p className=" text-decoration-underline">{comment.author}</p>
-              <p>{comment.comment}</p>
-              <p className=" fw-bold">Rating:{comment.rate}/5</p>
-              <hr />
-            </div>
-          ))}
-        </Card.Body>
-      </Card>
+      <>
+        {!this.props.bookAsin ? (
+          <p className="mb-0 text-center fs-4">Seleziona un libro per vedere i commenti.</p>
+        ) : (
+          <>
+            {/* <AddComment /> */}
+            {this.state.comments.map((comment) => (
+              <Alert variant="light" key={comment._id}>
+                <hr />
+                <p className="">
+                  <strong>Utente:</strong> {comment.author}
+                </p>
+                <p>{comment.comment}</p>
+                <p className=" fw-bold">Rating:{comment.rate}/5</p>
+                <hr />
+              </Alert>
+            ))}
+          </>
+        )}
+      </>
     );
   }
 }

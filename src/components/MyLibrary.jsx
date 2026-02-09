@@ -1,4 +1,4 @@
-import { Row, Form } from "react-bootstrap";
+import { Row, Form, Col } from "react-bootstrap";
 import SingleBook from "./SingleBook";
 import { Component } from "react";
 import horrorLib from "../data/horror.json";
@@ -6,6 +6,7 @@ import fantasyLib from "../data/fantasy.json";
 import historyLib from "../data/history.json";
 import romanceLib from "../data/romance.json";
 import scifiLib from "../data/scifi.json";
+import CommentArea from "./CommentArea";
 
 // const MyLibrary = function (props) {
 //   return (
@@ -25,6 +26,11 @@ const initialSearch = {
 class MyLibrary extends Component {
   state = {
     search: initialSearch,
+    selectedAsin: null,
+  };
+
+  handleSelectBook = (asin) => {
+    this.setState({ selectedAsin: asin });
   };
 
   render() {
@@ -77,6 +83,7 @@ class MyLibrary extends Component {
                     ...this.state.search,
                     genre: e.target.value,
                   },
+                  selectedAsin: null,
                 });
               }}
             >
@@ -89,10 +96,25 @@ class MyLibrary extends Component {
           </Form.Group>
         </Form>
 
-        <Row className=" justify-content-center g-2 gap-3 my-5">
-          {searchedBooks.map((libro) => {
-            return <SingleBook key={libro.asin} book={libro} />;
-          })}
+        <Row className=" my-5 px-0 px-md-3">
+          <Col className="d-block m-auto" xs={12} lg={8}>
+            <Row className="g-2 gap-3 justify-content-center">
+              {searchedBooks.map((libro) => {
+                return <SingleBook key={libro.asin} book={libro} selectedAsin={this.state.selectedAsin} onSelect={this.handleSelectBook} />;
+              })}
+            </Row>
+          </Col>
+          <Col
+            xs={0}
+            lg={4}
+            className="d-md-block bg-dark-subtle overflow-y-auto position-sticky top-0 pt-2 pb-5 pb-lg-0 mt-4 mt-lg-0"
+            style={{ maxHeight: "50rem" }}
+          >
+            <div className="text-center mt-2 mb-4">
+              <h2>Recensioni</h2>
+            </div>
+            <CommentArea bookAsin={this.state.selectedAsin} />
+          </Col>
         </Row>
       </>
     );
