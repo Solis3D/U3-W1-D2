@@ -1,4 +1,4 @@
-import { Component, use, useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
 const commentsURL = "https://striveschool-api.herokuapp.com/api/comments/";
